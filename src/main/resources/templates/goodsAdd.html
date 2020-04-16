@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css" media="screen"/>
+    <!--layui的css-->
+<!--    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />-->
+    <link href="css/style2.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="resources/scripts/jquery-1.9.1.min.js"></script>
+    <!-- 添加jquery弹窗的依赖 -->
+    <script src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+    <!-- 引入webuploader依赖 -->
+    <script src="resources/widget/webuploader/webuploader.min.js"></script>
+    <link rel="stylesheet" href="resources/widget/webuploader/webuploader.css"/>
+
+<!--    <script type="text/javascript" src="lib/Validform/5.3.2/Validform.min.js"></script>-->
+
+    <!--layui的js-->
+  <!--  <script type="text/javascript" src="lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="js/H-ui.js"></script>
+    <script type="text/javascript" src="js/H-ui.admin.js"></script>-->
+    <script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+
+    <link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link href="/uploadifive/uploadifive.css"  type="text/css"/>
+
+    <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/icheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="lib/Validform/5.3.2/Validform.min.js"></script>
+    <script type="text/javascript" src="lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="js/H-ui.js"></script>
+    <script type="text/javascript" src="js/H-ui.admin.js"></script>
+    <script type="text/javascript" src="lib/zTree/v3/js/jquery.ztree.core-3.5.js"></script>
+    <script type="text/javascript" src="uploadifive/jquery.uploadifive.js"></script>
+
+</head>
+<body>
+<!-- TODO C4 这是添加商品的弹出框页面 -->
+<div id="addGoodsdialog">
+    <div class="content-box-content">
+        <div class="tab-content default-tab" id="tab2">
+            <!--TODO E1 form表单提交商品数据到 ajax-->
+            <form action="" method="post">
+                <fieldset>
+                    <p>
+                        <label>商品标题</label>
+                        <input class="text-input medium-input datepicker" type="text"
+                               name="subject"/>
+                    </p>
+                    <!--上传封面-->
+                    <p>
+                        <label>上传封面</label>
+                        <img id="fm_img" style="width: 120px; height: 120px"/>
+                        <input type="hidden" id="fengmianurl" name="fengmianurl"/>
+                    <div id="fm_shangchuan">上传封面</div>
+                    </p>
+                    <!--上传其他图片-->
+                    <p>
+                        <label>上传其他图片</label>
+                    <div id="other_uploader">上传其他图片</div>
+                    <div id="imgdiv"
+                         style="width: 600px; height: 300px; border: darkgray solid 1px; margin-top: 10px"></div>
+                    <div id="imgurl">
+                    </div>
+                    </p>
+
+                    <p>
+                        <label>商品价格</label>
+                        <input
+                                class="text-input medium-input datepicker" type="text"
+                                name="price"/>
+                    </p>
+                    <p>
+                        <label>商品市场价格</label>
+                        <input
+                                class="text-input medium-input datepicker" type="text"
+                                name="shiprice"/>
+                    </p>
+                    <p>
+                        <label>商品库存</label>
+                        <input
+                                class="text-input medium-input datepicker" type="text"
+                                name="save"/>
+                    </p>
+                    <p>
+                        <label>商品描述</label>
+                        <textarea class="text-input textarea wysiwyg" id="textarea"
+                                  name="info" cols="79" rows="15"></textarea>
+                    </p>
+                    <p>
+                        <label>商品所属用户ID</label>
+                        <input
+                                class="text-input medium-input datepicker" type="text"
+                                name="uid"/>
+                    </p>
+                    <p>
+                        <button type="submit" id="buttontjsp" >添加商品</button>
+                    </p>
+                </fieldset>
+                <div class="clear"></div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    //页面加载后初始化(上传封面。单张图片)
+    $(function () {
+        //TODO D1 页面初始化就初始化Web Uploader组件，并绑定上传按钮，指定上传到哪个controller（封面）
+        // 1.初始化Web Uploader组件
+        var uploader = WebUploader.create({
+            auto: true,// 选完文件后，是否自动上传，true为自动上传。
+            swf: "/resources/widget/webuploader/Uploader.swf", // swf文件路径
+            server: '/GoodsController/shangchuan',// 文件接收服务端。
+            // 选择文件的按钮。可选。内部根据当前运行时创建，可能是input元素，div，也可能是flash.
+            pick: '#fm_shangchuan'
+        });
+        //2.设置上传后的回调方法
+        uploader.on('uploadSuccess', function (file, response) {
+            if (response.code == "200") {
+                // TODO D3 发送请求携带图片路径让controller帮忙读取它所在电脑的磁盘中的图片（封面）
+                $("#fm_img").attr("src", "GoodsController/queryImageByServer?ShangChuanRealpath="+response.data);//设置图片回显
+                $("#fengmianurl").val(response.data);
+            } else {
+                alert("图片上传失败！");
+            }
+        });
+    });
+
+    //页面加载后初始化(上传其他图片。多张图片)
+    $(function () {
+        //TODO D1 页面初始化就初始化Web Uploader组件，并绑定上传按钮，指定上传到哪个controller(多张图片)
+        // 初始化Web Uploader
+        var uploader = WebUploader.create({
+            // 选完文件后，是否自动上传。
+            auto: true,
+            // swf文件路径
+            swf: "/resources/widget/webuploader/Uploader.swf",
+            // 文件接收服务端。
+            server: '/GoodsController/shangchuan',
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#other_uploader'
+        });
+
+        //设置上传后的回调方法
+        uploader.on('uploadSuccess', function (file, response) {
+            if (response.code == "200") {
+                //设置图片回显
+                // TODO D3 发送请求携带图片路径让controller帮忙读取它所在电脑的磁盘中的图片（多张图片）
+                var html = "<img style='width: 120px; height: 120px; margin: 10px' src='GoodsController/queryImageByServer?ShangChuanRealpath=" + response.data + "' />";
+                $("#imgdiv").append(html);
+
+
+                //设置图片的路径隐藏域
+                var htmlinput = "<input type='hidden' name='otherurls' value='" + response.data + "'/>";
+                $("#imgurl").append(htmlinput);
+            } else {
+                alert("图片上传失败！");
+            }
+        });
+    });
+
+    //TODO E2 表单“添加商品”被点击Ajax提交商品信息
+    $("#buttontjsp").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "GoodsController/addGood",
+            data: $("form").serialize(),
+            success: function (data) {
+                if (data.result==true) {
+                    layer.msg('添加成功', {icon: 6, time: 2000}, function () {
+                        parent.$("#aaa").click();
+                    })
+                } else {
+                    layer.msg('添加失败', {icon: 5, time: 2000})
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

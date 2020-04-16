@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <LINK rel="Bookmark" href="/favicon.ico" >
+    <LINK rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link href="lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+</head>
+<body id="authTable">
+<div class="pd-20">
+
+    <form method="post" action="/user/getUserNotHaveRolePage">
+
+        <div class="text-c">
+
+            <div class="row cl ">
+               <!-- <div class="formControls col-3">
+                    昵称名: <input type="text" name="nicknane" value="${nicknane}" class="input-text" style="width: 250px">
+                </div>-->
+            </div>
+            <div class="row cl">
+                <div class="cl pd-5">
+                    <button type="submit"
+                            class="btn btn-success radius" id="" name="">
+                        <i class="Hui-iconfont">&#xe665;</i> 搜用户
+                    </button>
+                    <button type="button"  class="btn btn-success radius" id=""  name="" onclick="location.replace(location.href);">
+                        <i class="Hui-iconfont">&#xe66b;</i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+        <tr class="text-c">
+            <th width="25"><input type="checkbox" name="" value="" id="quanxuan"></th>
+            <th width="40">ID</th>
+            <th width="150">用户名</th>
+            <th width="150">密码</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--TODO N4 展示没有该角色用户的地方-->
+
+            <tr class="text-c" th:each="backUser,iterStat:${backUserNotHaveRoleList}">
+                <td><input type="checkbox" class="user_id_batch" onclick="dangxuan(${page.list.size()})" th:value="${backUser.id}" name=""></td>
+                <td th:text="${backUser.id}"></td>
+                <td th:text="${backUser.username}"></td>
+                <td th:text="${backUser.password}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <!--TODO N5 layer分页样式-->
+  <iframe th:replace="page_roleid.html"/>
+    <!--TODO R1 点击设置角色触发点击事件给用户绑定选中的角色-->
+    <button type="button"  class="btn btn-success radius" id=""  name="" onclick="setTheRoleToUser()">
+        <i class="Hui-iconfont">&#xe66b;</i> 设置角色
+    </button>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/H-ui.js"></script>
+<script type="text/javascript" src="js/H-ui.admin.js"></script>
+<script type="text/javascript" src="js/form_utils.js"></script>
+<script type="text/javascript">
+
+    /*单选*/
+    function dangxuan(length) {
+        /*length就是当前页展示的数据的条数,如果选完了单选，就选上全选*/
+        if( $(".user_id_batch:checked").length==length){
+            /*选上全选*/
+            $("#quanxuan").prop("checked", true);
+        }
+        /*length就是当前页展示的数据的条数,如果没有选完单选，就取消全选*/
+        if( $(".user_id_batch:checked").length!=length){
+            /*取消全选*/
+            $("#quanxuan").prop("checked", false);
+        }
+    }
+
+    // TODO R2 点击事件里发送请求去controller给用户绑定选中的角色
+    function setTheRoleToUser(){
+
+        /*1.定义一个对象用来装数组*/
+        var param = new Object();
+        /*2.拿到角色id*/
+        var roleId = [[${roleid}]];
+
+        // 3.先获取选择的要授予角色的用户id
+        var idArray = new Array();
+        $(".user_id_batch:checked").each(function(index,item){
+            idArray.push($(item).val());
+        });
+        if (idArray.length==0){
+            layer.msg("请选择用户！",{icon: 1,time:1000});
+            return ;
+        }
+        // 2.异步发送数据
+        param.userIds = idArray; // 把数组放到对象中
+        param.roleId = roleId;
+
+        $.post("RoleController/setTheRoleToUser",param,function(data){
+            // 1.先判断是否操作成功
+            if(data.result){
+
+                layer.msg(data.data, {icon: 1,time:1000},function(){
+                    // 获取弹出框的索引
+                    var index = parent.layer.getFrameIndex(window.name);
+                    // 关闭弹出框
+                    parent.layer.close(index);
+
+                });
+            }else{
+                layer.msg(data.data, {icon: 2,time:1000},function(){
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                });
+            }
+            /*刷新*/
+            /* location.reload();*/
+        });
+    }
+</script>
+</body>
+</html>
