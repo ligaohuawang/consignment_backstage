@@ -5,6 +5,8 @@ import com.qf.Base.BaseService;
 import com.qf.entity.BackUser;
 import org.springframework.ui.ModelMap;
 
+import java.util.Set;
+
 public interface IBackUserService extends BaseService<BackUser> {
     /**
      * 根据用户名查询用户
@@ -38,4 +40,11 @@ public interface IBackUserService extends BaseService<BackUser> {
      * @return
      */
     ModelMap getUserNotHaveRolePage(Integer roleid, Page<BackUser> page, ModelMap map);
+
+    /**
+     * 根据用户ID查询用户权限
+     * @param id
+     * @return
+     */
+    Set<String> selectUserMenu(Integer id);
 }

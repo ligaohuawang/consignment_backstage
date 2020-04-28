@@ -9,6 +9,7 @@ import com.qf.result.ResultDate;
 import com.qf.service.IGoodsService;
 import com.qf.service.IOrderService;
 import com.qf.service.IPurchaseOrderService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,8 @@ public class GoodsController {
      * @return
      */
     //TODO B2 查询未下架的所有商品
+    //TODO S7 这里需要判断这个用户是否拥有GoodsController:selectGoodsPage权限
+    @RequiresPermissions("GoodsController:selectGoodsPage")
     @RequestMapping("/selectGoodsPage")
     public String selectGoodsPage(Page<Goods> page, ModelMap map){
         ModelMap map1 = iGoodsService.selectPage(page, map);

@@ -59,6 +59,13 @@
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
         </dependency>
+<!--TODO S1 shiro整合spring的依赖-->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

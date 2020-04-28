@@ -2,6 +2,10 @@ package com.qf.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qf.entity.BackUser;
 import com.qf.service.IBackUserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,11 +20,20 @@ public class BackUserController {
     //TODO A 用户登录(BackUserController)
     @RequestMapping("/login")
     public String login(BackUser backUser){
-        BackUser backUser2=iBackUserService.selectByUserName(backUser.getUsername());
-        if (backUser.getPassword().equals(backUser2.getPassword())){//登录成功
-            return "index2";
+        //TODO S4 用户登录时先判断是否已经认证，没有认证就去认证
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated()){//未进行认证
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(backUser.getUsername(),backUser.getPassword());
+            try {
+                //TODO S5 前往自定义realm进行认证
+                subject.login(usernamePasswordToken);
+            }catch (AuthenticationException a){
+                System.err.println("认证失败");
+                return "index";
+            }
+
         }
-        return "index";
+        return "index2";
     }
 
     //TODO N3 controller接收请求，根据角色id查询未拥有该角色的所有用户并分页

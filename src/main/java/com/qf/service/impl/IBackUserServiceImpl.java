@@ -14,6 +14,7 @@ import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class IBackUserServiceImpl implements IBackUserService {
@@ -138,6 +139,16 @@ public class IBackUserServiceImpl implements IBackUserService {
         Page<BackUser> userNotHaveRolePage = iBackUserMapper.getUserNotHaveRolePage(page, roleid);
         map.put("page",userNotHaveRolePage);
         return map;
+    }
+
+    /**
+     * 根据用户ID查询用户权限
+     * @param id
+     * @return
+     */
+    @Override
+    public Set<String> selectUserMenu(Integer id) {
+        return iBackUserMapper.selectUserMenu(id);
     }
 
 }
