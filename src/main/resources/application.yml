@@ -1,6 +1,6 @@
 #1.�˿ں�
 server:
-  port: 8082
+  port: 8083
 
 spring:
   #2.thymeleaf

@@ -8,7 +8,7 @@
     <link href="lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
 </head>
 <body id="userBody">
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 申请列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="pd-20">
     <div class="text-c">
 
@@ -45,14 +45,14 @@
 
         <div class="row cl">
             <div class="cl pd-5">
-          <!--      <button type="button"
+             <!--   <button type="button"
                         class="btn btn-success radius" id="" name="" onclick="selectOrderByCondition()">
                    &lt;!&ndash; <i class="Hui-iconfont">&#xe665;</i> 搜订单&ndash;&gt;
                 </button>-->
             </div>
         </div>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加订单</a></span> <span class="r"></span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="admin_add('添加管理员','admin-add.html','800','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加申请</a></span> <span class="r"></span> </div>
     <table class="table table-border table-bordered table-bg">
         <thead>
         <!--  <tr>
@@ -61,42 +61,42 @@
         <tr class="text-c">
             <th width="25"><input type="checkbox" name="" value="" id="quanxuan"></th>
             <th width="40">ID</th>
-            <th width="150">收货人</th>
-            <th width="150">收货人电话</th>
+            <th width="150">申请时间</th>
+            <th width="150">申请人ID</th>
+            <th width="150">申请人电话</th>
             <!--<th width="90">支付方式</th>-->
-            <th width="150">邮寄方式</th>
-            <th width="150">采购单价格</th>
-            <th width="150">下单时间</th>
-            <th width="150">订单状态</th>
-            <th width="150">采购单所属用户ID</th>
-            <th width="150">订单详情</th>
+            <th width="150">申请商品</th>
+            <th width="150">申请商品图片</th>
+            <th width="150">数量</th>
+            <th width="150">申请原因</th>
+            <th width="150">状态</th>
             <th width="100">操作</th>
         </tr>
         </thead>
         <tbody>
-        <!--TODO J3 展示采购订单数据的地方-->
-        <tr class="text-c" th:each="good,iterStat:${purchaseOrder}">
-            <td><input type="checkbox" th:value="${good.oid}" name="" onclick="dangxuan()" class="ids"></td>
-            <td th:text="${good.id}"></td>
-            <td th:text="${good.person}"></td>
-            <td th:text="${good.phone}"></td>
+        <!--TODO U3 展示采购订单数据的地方-->
+        <tr class="text-c" th:each="application1,iterStat:${applicationList}">
+            <td><input type="checkbox" th:value="${application1.id}" name="" onclick="dangxuan()" class="ids"></td>
+            <td th:text="${application1.id}"></td>
+            <td th:text="${#dates.format(application1.createTime, 'yyyy-MM-dd')}">
+            <td th:text="${application1.uid}"></td>
+            <td th:text="${application1.phone}"></td>
             <!--<td th:text="${good.paymethod}"></td>-->
-            <td th:text="${good.expressmethod}"></td>
-            <td th:text="${good.xiaoji}"></td>
-            <td th:text="${#dates.format(good.createTime, 'yyyy-MM-dd')}">
+            <td th:text="${application1.gname}"></td>
+            <td><img th:src="|/GoodsController/queryImageByServer?ShangChuanRealpath=${application1.url}|" style="width: 80px;height: 100px"></td>
+            <td th:text="${application1.gnumber}"></td>
+            <td th:text="${application1.reason}"></td>
                 <!-- <span th:text="${#dates.format(${good.createTime},'yyyy-MM-dd HH:mm:ss')}">4564546</span>-->
                 <!--<fmt:formatDate value="${order.createTime}" pattern="yyyy-MM-dd"></fmt:formatDate>-->
             </td>
-            <td th:if="${good.payStatus} eq 1">已支付</td>
-            <td th:if="${good.payStatus} eq 0">未支付</td>
-            <td th:text="${good.puid}"></td>
-            <td><a href="javascript:;" onclick="admin_add('订单详情','orderDetail/selectAllOrderDetailByOrderNumber?orderNumber=${order.orderNumber}','800','500')">查看详情</a></td>
+            <td th:if="${application1.sqstatus} eq 1">已审核</td>
+            <td th:if="${application1.sqstatus} eq 0">待审核</td>
             <td class="td-manage"><a style="text-decoration:none" onClick="admin_stop(this,'10001')" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a> <a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','admin-add.html','1','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_del(this,'1',${order.orderNumber})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
         </tr>
 
         </tbody>
     </table>
-    <!--TODO J4 layer分页样式-->
+    <!--TODO U4 layer分页样式-->
     <iframe th:replace="page.html"/>
     <!-- <jsp:include page="/commons/page.jsp">
          <jsp:param name="bodyId" value="userBody"></jsp:param>

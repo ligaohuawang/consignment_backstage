@@ -38,17 +38,17 @@
 
 </head>
 <body id="product-list">
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 管理员列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 商品管理 <span class="c-gray en">&gt;</span> 商品列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <!--TODO C1 点击添加商品按钮去到 C2 layer弹出画好的页面-->
-<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a  id="deleteAll" href="javascript:;" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>   <a href="javascript:;" onclick="admin_edit('添加商品','GoodsController/toAddGoods','1','800','700')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加商品</a></span> <!--<span class="r">共有数据：<strong>54</strong> 条</span>--> </div>
+<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a  id="deleteAll" href="javascript:;" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量下架</a>   <a href="javascript:;" onclick="admin_edit('添加商品','GoodsController/toAddGoods','1','800','700')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加商品</a></span> <!--<span class="r">共有数据：<strong>54</strong> 条</span>--> </div>
 <a href="javascript:void(0)" id="aaa"></a>
 <div class="text-c">
     <div class="row cl">
         <div class="cl pd-5">
-            <button type="button"
+          <!--  <button type="button"
                     class="btn btn-success radius" id="query" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 搜索
-            </button>
+            </button>-->
         </div>
     </div>
 </div>
@@ -87,13 +87,13 @@
                 <td th:text="${good.uid}"></td>
                 <td class="td-manage"><a style="text-decoration:none" onClick="admin_stop(this,'10001')" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a> <a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','product/toupdate?pid=${product.pid}','1','800','700')" class="ml-5" style="text-decoration:none" ><i class="Hui-iconfont">&#xe6df;</i></a>
                    <!--class="ml-5" style="text-decoration:none"-->
-                    <a id="delete" title="删除"  th:onclick="'javascript:delone(\''+${good.id}+'\');'" href="javascript:void(0);"  class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a><input type="hidden" th:value="${good.id}"></td>
+                    <a id="delete" title="下架"  th:onclick="'javascript:delone(\''+${good.id}+'\');'" href="javascript:void(0);"  class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a><input type="hidden" th:value="${good.id}"></td>
             </tr>
         </tbody>
     </table>
 
     <!--列表 end-->
-    <div clas<iframe th:replace="page.html"/>s="clear"></div>
+    <div class="clear"> <iframe th:replace="page.html"/></div>
     <!--TODO B4 底部layer的分页样式-->
 
 </div>
@@ -124,11 +124,11 @@
     }
     /*管理员-删除*/
     function admin_del(obj,id){
-        layer.confirm('确认要删除吗？',function(index){
+        layer.confirm('确认要下架吗？',function(index){
             //此处请求后台程序，下方是成功后的前台处理……
 
             $(obj).parents("tr").remove();
-            layer.msg('已删除!',{icon:1,time:1000});
+            layer.msg('已下架!',{icon:1,time:1000});
         });
     }
     /*管理员-编辑*/
@@ -163,18 +163,18 @@
 
     /*删除单个*/
     function delone(id){
-        layer.confirm("确定要删除吗？",{icon: 6, time: 2000},function () {
+        layer.confirm("确定要下架吗？",{icon: 6, time: 2000},function () {
             $.ajax({
                 type:"GET",
                 url:"GoodsController/deleteOne",
                 data:"pid="+id,
                 success:function (data) {
                     if(data.result){
-                        layer.msg('删除成功', {icon: 6, time: 2000},function () {
+                        layer.msg('下架成功', {icon: 6, time: 2000},function () {
                             window.location.reload();
                         })
                     }else {
-                        layer.msg('删除失败', {icon: 5, time: 2000})
+                        layer.msg('下架失败', {icon: 5, time: 2000})
                     }
                 }
             })
@@ -188,9 +188,9 @@
     //TODO F2 Ajax发送id去controller删除多个商品
     $("#deleteAll").click(function(){
         if($("input[name='checkbox']:checked").length == 0){
-            layer.msg("请选择要删除的值",{icon: 6, time: 2000})
+            layer.msg("请选择要下架的商品",{icon: 6, time: 2000})
         }else{
-            layer.confirm("确认删除吗？",{icon: 6, time: 2000},function () {
+            layer.confirm("确认下架吗？",{icon: 6, time: 2000},function () {
                 var a = new Array();
                 for(i = 0 ; i < $("input[name='checkbox']:checked").length ; i++){
                     a.push($("input[name='checkbox']:checked")[i].value)
@@ -202,11 +202,11 @@
                     data:"pids="+b,
                     success:function (data) {
                         if(data.result){
-                            layer.msg('删除成功', {icon: 6, time: 2000},function () {
+                            layer.msg('下架成功', {icon: 6, time: 2000},function () {
                                 window.location.reload();
                             })
                         }else {
-                            layer.msg('删除失败', {icon: 5, time: 2000})
+                            layer.msg('下架失败', {icon: 5, time: 2000})
                         }
                     }
                 })

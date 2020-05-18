@@ -2,6 +2,7 @@ package com.qf.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qf.entity.FrontUser;
 import com.qf.service.IFrontUserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,6 +17,7 @@ public class FrontUserController {
     private IFrontUserService iFrontUserService;
 
     //TODO G2 controller接收请求去查询全部未被删除的用户并分页
+    @RequiresPermissions("frontUserController:selectAllUserPage")
     @RequestMapping("/selectAllUserPage")
     public String selectAllUserPage(Page<FrontUser> page, ModelMap map){
         ModelMap map1=iFrontUserService.selectPage(page,map);

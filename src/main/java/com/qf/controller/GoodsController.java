@@ -1,11 +1,13 @@
 package com.qf.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qf.entity.Application;
 import com.qf.entity.Goods;
 import com.qf.entity.Orders;
 import com.qf.entity.PurchaseOrder;
 import com.qf.result.ResultData;
 import com.qf.result.ResultDate;
+import com.qf.service.IApplicationService;
 import com.qf.service.IGoodsService;
 import com.qf.service.IOrderService;
 import com.qf.service.IPurchaseOrderService;
@@ -38,6 +40,8 @@ public class GoodsController {
     private IOrderService iOrderService;
     @Autowired
     private IPurchaseOrderService iPurchaseOrderService;
+    @Autowired
+    private IApplicationService iApplicationService;
 
     //准备一个本地磁盘的路径
     private String localpath = "F:/bysj/images";
@@ -168,6 +172,7 @@ public class GoodsController {
         return  iGoodsService.deleteOne(pid);
     }
     //TODO I2 controller接收请求去查询全部未被删除的用户商品订单并分页
+    @RequiresPermissions("GoodsController:selectAllUserAllGoodsOrderPage")
     @RequestMapping("/selectAllUserAllGoodsOrderPage")
     public String selectAllUserAllGoodsOrderPage(Page<Orders> page, ModelMap map){
         ModelMap map1 = iOrderService.selectPage(page, map);
@@ -177,11 +182,21 @@ public class GoodsController {
     }
 
     //TODO J2 controller接收请求去查询全部未被删除的用户采购订单并分页
+    @RequiresPermissions("GoodsController:selectAllUserAllPurchaseOrderPage")
     @RequestMapping("/selectAllUserAllPurchaseOrderPage")
     public String selectAllUserAllPurchaseOrderPage(Page<PurchaseOrder> page, ModelMap map){
         ModelMap map1 = iPurchaseOrderService.selectPage(page, map);
         map1.put("url","GoodsController/selectAllUserAllPurchaseOrderPage");
         map1.put("purchaseOrder",page.getRecords());
         return "purchaseOrderList";
+    }
+    //TODO U2 controller接收请求去查询全部用户的代销申请
+    @RequiresPermissions("GoodsController:selectAllApplicationPage")
+    @RequestMapping("/selectAllApplicationPage")
+    public String selectAllApplicationPage(Page<Application> page,ModelMap map){
+        ModelMap map1 = iApplicationService.selectPage(page, map);
+        map1.put("url","GoodsController/selectAllApplicationPage");
+        map1.put("applicationList",page.getRecords());
+        return "applicationList";
     }
 }

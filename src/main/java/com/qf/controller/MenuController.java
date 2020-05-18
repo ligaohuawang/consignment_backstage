@@ -6,6 +6,7 @@ import com.qf.entity.Menu;
 import com.qf.entity.Tree;
 import com.qf.result.ResultDate;
 import com.qf.service.IMenuService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +23,7 @@ public class MenuController {
     private IMenuService iMenuService;
 
     //TODO L2 controller接收请求去查询所有未被删除的权限并分页显示
+    @RequiresPermissions("MenuController:selectAllMenuPage")
     @RequestMapping("/selectAllMenuPage")
     public String selectAllMenuPage(Page<Menu> page, ModelMap map){
         ModelMap map1 = iMenuService.selectPage(page, map);

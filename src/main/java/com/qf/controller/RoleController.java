@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qf.entity.Role;
 import com.qf.result.ResultDate;
 import com.qf.service.IRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,7 @@ public class RoleController {
     private IRoleService iRoleService;
 
     //TODO K2 controller接收请求查询角色并分页
+    @RequiresPermissions("RoleController:selectAllRolePage")
     @RequestMapping("/selectAllRolePage")
     public String selectAllRolePage(Page<Role> page, ModelMap map){
         ModelMap map1 = iRoleService.selectPage(page, map);
@@ -29,6 +31,7 @@ public class RoleController {
     }
 
     //TODO M2 controller 接收请求查询所有角色给下拉框
+    @RequiresPermissions("RoleController:getRoleList")
     @RequestMapping("/getRoleList")
     public String getRoleList(ModelMap map){
     List<Role> roleList=iRoleService.selectList();
